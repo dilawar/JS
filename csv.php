@@ -6,18 +6,20 @@
     <link rel="stylesheet" href="./node_modules/dygraphs/dist/dygraph.css" title="" type="" />
 </head>
 
+<?php
+
+$delimiter = ',';
+
+?>
+
 <div id="csv"></div>
 
 <script type="text/javascript" charset="utf-8">
 g = new Dygraph( 
-    document.getElementById( "csv" ), "__data.csv"
-    //, { legend : 'always', 
-        //title : 'A vs t',
-        //showRoller : true,
-        //rollPeriod : 14,
-        //customBars : true,
-        //ylabel : 'Activity',
-     //}
+    document.getElementById( "csv" ), "tmp/__data.csv", 
+    { 
+        delimiter : " "
+    }
 );
 </script>
 
@@ -33,14 +35,19 @@ g = new Dygraph(
 <?php
 
 // Upload the file and save it on server.
-if( $_POST && $_FILES )
+if( $_FILES )
 {
     // read the file and write to temporary file.
-    $txt = file_get_contents( $_FILES[ 'uploadFile']['tmp_name'] );
-    file_put_contents( "__data.csv", $txt );
-    if( ! file_exists( "__data.csv" ) )
+    if( $_FILES['file']['tmp_name'] )
     {
-        echo "<p>Could not upload the file. </p>";
+        $txt = file_get_contents( $_FILES['file']['tmp_name'] );
+
+        file_put_contents( "./tmp/__data.csv", $txt );
+
+        if( ! file_exists( "./tmp/__data.csv" ) )
+            echo "<p>Could not upload the file. </p>";
+        else
+            echo "Successful upload";
     }
 }
 
